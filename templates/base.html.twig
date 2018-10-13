@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+			<link href="{{ asset('css/main.css') }}" rel="stylesheet" />
+		{% endblock %}
+    </head>
+    <body>
+		{% block body %}
+		
+		<div class="header">
+			{% block header %}
+				<ul>
+					<li>
+						<a href = "{{ path('main')}}">Home</a>
+					</li>
+					<li>
+						<a href = "{{ path('blog_index')}}">Blog</a>
+					</li>
+					<li>
+						<a href = "{{ path('categories_index')}}">Categories</a>
+					</li>
+				</ul>
+			{% endblock %}
+		</div>
+		
+		<div class="menu">
+			{% block menu %}
+			{% endblock %}
+		</div>
+		
+		<div class="content">
+			{% block content %}
+			{% endblock %}
+		</div>
+		
+		<div class="footer">
+			{% block footer %}
+				<a href = "{{ path('main')}}">Main page</a>
+			{% endblock %}
+		</div>
+		
+		{% endblock %}
+		
+        {% block javascripts %}{% endblock %}
+		
+    </body>
+</html>

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Blog index{% endblock %}
+
+{% block content %}
+    <h1>Blog</h1>
+	<a href="{{ path('blog_new') }}">Create new</a>
+	<hr>
+    <table class="table">
+        <tbody>
+        {% for blog in blogs %}
+            <tr>
+                <td>
+					<a href="{{ path('blog_show', {'id': blog.id}) }}">{{ blog.title }}</a> &nbsp; ({{ blog.createdAt ? blog.createdAt|date('Y-m-d H:i:s') : '' }})
+				</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+{% block menu %}
+	<ul>
+	{% for category in categories %}
+		<li {% if selectedCategory == category.id %} class = "selected"{% endif %}><a href="{{ path('blog_index_category', {'id': category.id}) }}" >{{ category.category }}</a></li>
+	{% endfor %}
+	</ul>
+{% endblock%}
