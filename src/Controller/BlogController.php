@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Blog;
-use App\Form\Blog1Type;
+use App\Form\BlogType;
 use App\Repository\BlogRepository;
 use App\Repository\CategoriesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,7 +56,7 @@ class BlogController extends AbstractController
         $blog = new Blog();
 		$blog->setCreatedAt(new \DateTime());
 		
-        $form = $this->createForm(Blog1Type::class, $blog);
+        $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -86,7 +86,7 @@ class BlogController extends AbstractController
      */
     public function edit(Request $request, Blog $blog): Response
     {
-        $form = $this->createForm(Blog1Type::class, $blog);
+        $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

@@ -1,4 +1,53 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<table>
+	<tr>
+		<td>
+			{{ form_label(form.title) }}
+		</td>
+		<td>
+			{{ form_errors(form.title) }}
+			{{ form_widget(form.title) }}
+			{{ form_help(form.title) }}
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			{{ form_label(form.category) }}
+		</td>
+		<td>
+			{{ form_errors(form.category) }}
+			{{ form_widget(form.category) }}
+			{{ form_help(form.category) }}
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			{{ form_label(form.article) }}
+		</td>
+		<td>
+			{{ form_errors(form.article) }}
+			{{ form_widget(form.article) }}
+			{{ form_help(form.article) }}
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			{{ form_label(form.createdAt) }}
+		</td>
+		<td>
+			{{ form_errors(form.createdAt) }}
+			{{ form_widget(form.createdAt) }}
+			{{ form_help(form.createdAt) }}
+		</td>
+	</tr>
+	
+	<tr>
+		<td colspan = "2">
+			<button class="btn">{{ button_label|default('Save') }}</button>
+		</td>
+	</tr>
+</table>
 {{ form_end(form) }}
