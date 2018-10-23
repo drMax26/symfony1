@@ -95,6 +95,9 @@
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },
+    "paladinbbk/user-bundle": {
+        "version": "0.3.4-dev"
+    },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
     },

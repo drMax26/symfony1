@@ -39,9 +39,9 @@ class BlogController extends AbstractController
         return $this->render(
 							'blog/index.html.twig', 
 							[
-								'blogs' => $blogRepository->findByCategory($request->attributes->get('id')), 
+								'blogs' => $blogRepository->findByCategory($request->get('id')), 
 								'categories' => $CategoriesRepository->findAll(),
-								'selectedCategory' => $request->attributes->get('id'),
+								'selectedCategory' => $request->get('id'),
 							]
 		);
     }
@@ -78,6 +78,7 @@ class BlogController extends AbstractController
      */
     public function show(Blog $blog): Response
     {
+		//var_dump($blog);
         return $this->render('blog/show.html.twig', ['blog' => $blog]);
     }
 
