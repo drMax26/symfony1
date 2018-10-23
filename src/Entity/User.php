@@ -33,6 +33,11 @@ class User extends BaseUser
         // your own logic
     }
 
+    public function __toString()
+    {
+        return $this->getUsername();
+    }
+
     /**
      * @return Collection|Blog[]
      */

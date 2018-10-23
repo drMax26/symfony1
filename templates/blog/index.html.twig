@@ -11,8 +11,14 @@
         {% for blog in blogs %}
             <tr>
                 <td>
-					<a href="{{ path('blog_show', {'id': blog.id}) }}">{{ blog.title }}</a> &nbsp; ({{ blog.createdAt|date('d-m-Y H:i') }})
+					<a href="{{ path('blog_show', {'id': blog.id}) }}">{{ blog.title }}</a> &nbsp;
 				</td>
+                <td>
+                    {{ blog.user }}
+                </td>
+                <td>
+                    {{ blog.createdAt|date('d-m-Y H:i') }}
+                </td>
             </tr>
         {% else %}
             <tr>
