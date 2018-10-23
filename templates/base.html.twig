@@ -23,10 +23,11 @@
 						<a href = "{{ path('categories_index')}}">Categories</a>
 					</li>
 
-
-					<li>
-						<a href = "{{ logout_url(key = null) }}">logout ({{ app.user.username }})</a>
-					</li>
+					{% if app.user %}
+						<li>
+							<a href = "{{ logout_url(key = null) }}">logout ({{ app.user.username }})</a>
+						</li>
+					{% endif %}
 				</ul>
 			{% endblock %}
 		</div>
