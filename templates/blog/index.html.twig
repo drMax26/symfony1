@@ -4,7 +4,9 @@
 
 {% block content %}
     <h1>Blog</h1>
-	<a href="{{ path('blog_new') }}">Create new</a>
+    {% if app.user %}
+	    <a href="{{ path('blog_new') }}">Create new</a>
+    {% endif %}
 	<hr>
     <table class="table">
         <tbody>

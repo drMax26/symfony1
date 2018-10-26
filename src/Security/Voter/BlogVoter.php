@@ -2,6 +2,7 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Blog;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -23,11 +24,14 @@ class BlogVoter extends Voter
     {
         // replace with your own logic
         // https://symfony.com/doc/current/security/voters.html
-        return is_numeric($attribute);
+        //dump($attribute);
+        //dump($subject);
+        return is_numeric($attribute) || ($subject instanceof Blog);
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
+
 
         $user = $token->getUser();
 
@@ -36,14 +40,21 @@ class BlogVoter extends Voter
             return false;
         }
 
+        //dump($attribute);
+        //dump($user->getId());
+
         if ($attribute == $user->getId()){
             return true;
         }
-
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+/**
+        dump($subject->getUser()->getId());
+        dump($user->getId());
+/**/
+        if ($subject->getUser()->getId() == $user->getId()){
             return true;
         }
-        
+/**/
+
         return false;
     }
 }

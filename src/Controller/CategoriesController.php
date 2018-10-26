@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
 
 /**
  * @Route("/categories")
@@ -28,7 +28,7 @@ class CategoriesController extends AbstractController
 
     /**
      * @Route("/new", name="categories_new", methods="GET|POST")
-     * @Security("has_role(ROLE_ADMIN)")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function new(Request $request): Response
     {
@@ -60,7 +60,7 @@ class CategoriesController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="categories_edit", methods="GET|POST")
-     * @Security("has_role(ROLE_ADMIN)")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Categories $category): Response
     {
@@ -81,7 +81,7 @@ class CategoriesController extends AbstractController
 
     /**
      * @Route("/{id}", name="categories_delete", methods="DELETE")
-     * @Security("has_role(ROLE_ADMIN)")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Categories $category): Response
     {

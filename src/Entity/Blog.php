@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Blog
 {
@@ -41,6 +42,14 @@ class Blog
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="blogs")
      */
     private $user;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {

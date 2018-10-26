@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/blog")
@@ -54,8 +55,9 @@ class BlogController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        dump($request->getUser());
         $blog = new Blog();
-		$blog->setCreatedAt(new \DateTime());
+		//$blog->setUser($user->getId());
 		
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
@@ -85,13 +87,11 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="blog_edit", methods="GET|POST")
+     * @IsGranted("EDIT", subject="blog")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function edit(Request $request, Blog $blog, AuthorizationCheckerInterface $authCheck): Response
     {
-        if (!$authCheck->isGranted($blog->getUser()->getId())) {
-            return $this->redirectToRoute('blog_index');
-        };
-
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
 
@@ -109,13 +109,11 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/{id}", name="blog_delete", methods="DELETE")
+     * @IsGranted("EDIT", subject="blog")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function delete(Request $request, Blog $blog, AuthorizationCheckerInterface $authCheck): Response
     {
-        if (!$authCheck->isGranted($blog->getUser()->getId())) {
-            return $this->redirectToRoute('blog_index');
-        };
-
         if ($this->isCsrfTokenValid('delete'.$blog->getId(), $request->request->get('_token'))) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($blog);

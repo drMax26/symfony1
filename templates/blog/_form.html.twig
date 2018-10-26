@@ -32,18 +32,7 @@
 			{{ form_help(form.article) }}
 		</td>
 	</tr>
-	
-	<tr>
-		<td>
-			{{ form_label(form.createdAt) }}
-		</td>
-		<td>
-			{{ form_errors(form.createdAt) }}
-			{{ form_widget(form.createdAt) }}
-			{{ form_help(form.createdAt) }}
-		</td>
-	</tr>
-	
+
 	<tr>
 		<td colspan = "2">
 			<button class="btn">{{ button_label|default('Save') }}</button>
