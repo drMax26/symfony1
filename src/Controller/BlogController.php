@@ -4,14 +4,20 @@ namespace App\Controller;
 
 use App\Entity\Blog;
 use App\Form\BlogType;
+use App\Repository\BlogCommentRepository;
 use App\Repository\BlogRepository;
 use App\Repository\CategoriesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+
+//use Symfony\Component\Security\Core\Security;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("/blog")
@@ -36,33 +42,35 @@ class BlogController extends AbstractController
 	/**
      * @Route("/category/{id}", name="blog_index_category", methods="GET")
      */
-	public function indexByCategory(Request $request, BlogRepository $blogRepository, CategoriesRepository $CategoriesRepository): Response
+	public function indexByCategory(Request $request, BlogRepository $blogRepository, CategoriesRepository $CategoriesRepository, BlogCommentRepository $blogCommentRepository): Response
     {
         return $this->render(
-							'blog/index.html.twig', 
+							'blog/index.html.twig',
 							[
-								'blogs' => $blogRepository->findByCategory($request->get('id')), 
+								'blogs' => $blogRepository->findByCategory($request->get('id')),
 								'categories' => $CategoriesRepository->findAll(),
 								'selectedCategory' => $request->get('id'),
 							]
 		);
     }
-	
-	
+
+
 
     /**
      * @Route("/new", name="blog_new", methods="GET|POST")
      */
     public function new(Request $request): Response
     {
-        dump($request->getUser());
         $blog = new Blog();
-		//$blog->setUser($user->getId());
+		//$blog->setCreatedAt(new \DateTime());
 		
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $blog->setUser($this->getUser());
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($blog);
             $em->flush();
@@ -79,19 +87,25 @@ class BlogController extends AbstractController
     /**
      * @Route("/{id}", name="blog_show", methods="GET")
      */
-    public function show(Blog $blog): Response
+    public function show(Blog $blog, BlogCommentRepository $comment): Response
     {
 		//var_dump($blog);
-        return $this->render('blog/show.html.twig', ['blog' => $blog]);
+        return $this->render(
+                    'blog/show.html.twig',
+                    [
+                        'blog' => $blog,
+                        'comments' => $blog->getBlogComments(),
+                    ]
+        );
     }
 
     /**
      * @Route("/{id}/edit", name="blog_edit", methods="GET|POST")
-     * @IsGranted("EDIT", subject="blog")
-     * @IsGranted("ROLE_ADMIN")
+     * @Security("is_granted('EDIT', blog) or is_granted('ROLE_ADMIN')")
      */
     public function edit(Request $request, Blog $blog, AuthorizationCheckerInterface $authCheck): Response
     {
+        //* @IsGranted("EDIT", subject="blog"))
         $form = $this->createForm(BlogType::class, $blog);
         $form->handleRequest($request);
 
@@ -109,8 +123,7 @@ class BlogController extends AbstractController
 
     /**
      * @Route("/{id}", name="blog_delete", methods="DELETE")
-     * @IsGranted("EDIT", subject="blog")
-     * @IsGranted("ROLE_ADMIN")
+     * @Security("is_granted('EDIT', blog) or is_granted('ROLE_ADMIN')")
      */
     public function delete(Request $request, Blog $blog, AuthorizationCheckerInterface $authCheck): Response
     {

@@ -29,3 +29,23 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    admin.category:
+        class: App\Admin\CategoryAdmin
+        arguments: [~, App\Entity\Categories, ~]
+        tags:
+           - { name: sonata.admin, manager_type: orm, label: Category }
+        public: true
+
+    admin.blog:
+        class: App\Admin\BlogAdmin
+        arguments: [~, App\Entity\Blog, ~]
+        tags:
+        - { name: sonata.admin, manager_type: orm, label: Blog }
+        public: true
+
+
+    App\EventListener\PostPresistForBlogComment:
+        tags:
+        - { name: doctrine.event_listener, event: prePersist }

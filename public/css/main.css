@@ -1,16 +1,18 @@
 .content
 {
+	//position:relative;
 	margin: 0 auto;
 	padding-top: 32px;
 	max-width: 1090px;
 	width: 94%;
+	overflow: auto;
 }
 
 .footer
 {
-	position:absolute; 
+	position:fixed;
 	width:99%; 
-	bottom:5px; 
+	bottom:5px;
 
 	text-align: center;
 	background-color: #111;

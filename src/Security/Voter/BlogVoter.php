@@ -3,6 +3,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Blog;
+use App\Entity\BlogComment;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -26,13 +27,13 @@ class BlogVoter extends Voter
         // https://symfony.com/doc/current/security/voters.html
         //dump($attribute);
         //dump($subject);
-        return is_numeric($attribute) || ($subject instanceof Blog);
+        return is_numeric($attribute) || ($subject instanceof Blog) || ($subject instanceof BlogComment);
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
 
-
+        //dump($token->getRoles());
         $user = $token->getUser();
 
         // if the user is anonymous, do not grant access
@@ -46,7 +47,12 @@ class BlogVoter extends Voter
         if ($attribute == $user->getId()){
             return true;
         }
+
+        if (!$subject->getUser()){
+            return true;
+        }
 /**
+
         dump($subject->getUser()->getId());
         dump($user->getId());
 /**/

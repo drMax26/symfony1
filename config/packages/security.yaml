@@ -59,5 +59,6 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/blog/new, roles: ROLE_USER }
         - { path: ^/category/new, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_SUPER_ADMIN }
 
         - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }

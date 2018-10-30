@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -44,12 +46,28 @@ class Blog
     private $user;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\BlogComment", mappedBy="Blog")
+     */
+    private $blogComments;
+
+    public function __construct()
+    {
+        $this->blogComments = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->getTitle() ? $this->getTitle() : 'New article';
+    }
+
+    /**
      * @ORM\PrePersist
      */
     public function setCreatedAtValue()
     {
         $this->createdAt = new \DateTime();
     }
+
 
     public function getId(): ?int
     {
@@ -112,6 +130,34 @@ class Blog
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BlogComment[]
+     */
+    public function getBlogComments(): Collection
+    {
+        return $this->blogComments;
+    }
+
+    public function addBlogComment(BlogComment $blogComment): self
+    {
+        if (!$this->blogComments->contains($blogComment)) {
+            $this->blogComments[] = $blogComment;
+            $blogComment->addBlog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBlogComment(BlogComment $blogComment): self
+    {
+        if ($this->blogComments->contains($blogComment)) {
+            $this->blogComments->removeElement($blogComment);
+            $blogComment->removeBlog($this);
+        }
 
         return $this;
     }

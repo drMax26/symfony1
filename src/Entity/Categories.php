@@ -35,7 +35,7 @@ class Categories
 	
 	public function __toString()
     {
-        return $this->category;
+        return $this->getCategory() ? $this->getCategory() : 'New category';
     }
 
     public function getId(): ?int
