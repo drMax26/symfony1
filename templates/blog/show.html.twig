@@ -1,5 +1,18 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+	<link href="{{ asset('css/jquery-ui.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/jquery-3.3.1.min.js') }}"></script>
+	<script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+	<script src="{{ asset('js/blog.js') }}"></script>
+{% endblock %}
+
+
 {% block title %}Blog{% endblock %}
 {% block content %}
 
@@ -20,19 +33,34 @@
     	{{ include('blog/_delete_form.html.twig') }}
     {% endif %}
 	<hr>
+
+	<!-----            Comments ------------>
+
 	<h4>comments</h4>
     {% if app.user %}
-		<br><a href = "{{ path('blog_comment_new', {'blog_id': blog.id}) }}">add comment</a>
+		<br><button id = "addComment" name = "addComment">Add Comment</button>
+		<!--<a href = "{{ path('blog_comment_new', {'blog_id': blog.id}) }}">add comment</a>-->
 	{% endif %}
 	<hr>
     {% for comment in comments %}
-		{{ comment.Comment }} <br>
-		author: {{ comment.User.username }} ({{ comment.createdAt | date('d-m-Y H:i') }})
+		<div id = "comment{{ comment.id }}" name = "comment{{ comment.id }}">{{ comment.Comment }}</div>
+		author: {{ comment.User.username }} ({{ comment.createdAt | date('d-m-Y H:i') }})<br>
         {% if ((is_granted("EDIT", comment)) or (is_granted("ROLE_ADMIN"))) %}
-			<a href = "{{ path('blog_comment_edit', {id: comment.id}) }}">Edit</a>
-			<a href = "{{ path('blog_comment_delete', {id: comment.id}) }}">Delete</a>
+			<!--<a href = "{{ path('blog_comment_edit', {id: comment.id}) }}">Edit</a>-->
+			<!--<a href = "{{ path('blog_comment_delete', {id: comment.id}) }}">Delete</a>-->
+			<button id = "editComment" name = "editComment" onClick = "EditComment({{ comment.id }}); return false;">Edit Comment</button>
+			<button id = "deleteComment" name = "deleteComment" onClick = "DeleteComment({{ comment.id }}); return false;">Delete Comment</button>
+			<input type = "hidden" id = "commentDeleteURL{{ comment.id }}" value = "{{ path('jquery_blog_comment_delete', {'id': comment.id}) }}"/>
+			<input type = "hidden" id = "commentEditURL{{ comment.id }}" value = "{{ path('jquery_blog_comment_edit', {'id': comment.id}) }}"/>
+
 		{% endif %}
 		<hr width="30%">
 	{% endfor %}
+
+	<div id = "commentDialog" style = "display:none">
+		comment: <textarea id = "taComment"></textarea>
+	</div>
+	<input type = "hidden" id = "commentSaveURL" value = "{{ path('jquery_blog_comment_new', {'blog_id': blog.id}) }}"/>
+
 
 {% endblock %}

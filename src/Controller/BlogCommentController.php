@@ -116,4 +116,58 @@ class BlogCommentController extends AbstractController
 
         return $this->redirectToRoute('blog_comment_index');
     }
+
+    /**********************************************************************************************************************/
+    /* for JjQuery
+    /**********************************************************************************************************************/
+
+
+    /**
+     * @Route("/jquerynew/{blog_id}", name="jquery_blog_comment_new", methods="GET|POST")
+     */
+    public function newjQuery(Request $request, BlogRepository $blogRepository): Response
+    {
+        $blogComment = new BlogComment();
+        $blogComment->setUser($this->getUser());
+        $blog = $blogRepository->findBy(['id' => $request->get('blog_id')], null, 1);
+
+        $blogComment->addBlog($blog[0]);
+        $blogComment->setComment($request->get('comment'));
+
+        //var_dump($blogComment);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($blogComment);
+        $em->flush();
+
+        return $this->json(array('result' => 0));
+
+    }
+
+    /**
+     * @Route("jquerydelete/{id}", name="jquery_blog_comment_delete", methods="DELETE")
+     * @Security("is_granted('EDIT', blogComment) or is_granted('ROLE_ADMIN')")
+     */
+    public function deletejQuery(Request $request, BlogComment $blogComment): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($blogComment);
+        $em->flush();
+
+        return $this->json(array('result' => 0));
+    }
+
+    /**
+     * @Route("/{id}/jqueryedit", name="jquery_blog_comment_edit", methods="GET|POST")
+     * @Security("is_granted('EDIT', blogComment) or is_granted('ROLE_ADMIN')")
+     */
+    public function editjQuery(Request $request, BlogComment $blogComment): Response
+    {
+        $blogComment->setComment($request->get('comment'));
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json(array('result' => 0));
+
+    }
 }
